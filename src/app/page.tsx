@@ -3,6 +3,8 @@ import FeatureGrid from '@/components/sections/FeatureGrid'
 import ProblemSolution from '@/components/sections/ProblemSolution'
 import HowItWorks from '@/components/sections/HowItWorks'
 import BenefitsSection from '@/components/sections/BenefitsSection'
+import FAQSection from '@/components/sections/FAQSection'
+import FinalCTA from '@/components/sections/FinalCTA'
 
 export default function Home() {
   return (
@@ -12,7 +14,8 @@ export default function Home() {
       <ProblemSolution />
       <HowItWorks />
       <BenefitsSection />
-      {/* Additional sections will be added here */}
+      <FAQSection />
+      <FinalCTA />
     </main>
   )
 }
