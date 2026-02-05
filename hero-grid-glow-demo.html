@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facetimer - Animated Grid with Glow Effect Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        overflow-x: hidden;
+        background: #f8f5f9;
+      }
+
+      /* Hero Section Container */
+      .hero-section {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: linear-gradient(135deg, #faf8fb 0%, #f0f4ff 100%);
+      }
+
+      /* Animated Grid Background */
+      .grid-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .grid-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Subtle gradient overlay */
+      .gradient-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at 30% 50%,
+          rgba(216, 180, 254, 0.12) 0%,
+          transparent 50%
+        ),
+        radial-gradient(
+          circle at 70% 50%,
+          rgba(191, 219, 254, 0.12) 0%,
+          transparent 50%
+        );
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* Content */
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        max-width: 1200px;
+        padding: 0 2rem;
+      }
+
+      .hero-content h1 {
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        color: #1a1a2e;
+        letter-spacing: -0.02em;
+      }
+
+      .highlight {
+        background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+      }
+
+      .hero-content p {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: rgba(26, 26, 46, 0.7);
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Buttons */
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+        color: white;
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(139, 92, 246, 0.35);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.9);
+        color: #1a1a2e;
+        border: 2px solid rgba(139, 92, 246, 0.15);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 1);
+        border-color: rgba(139, 92, 246, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.12);
+      }
+
+      /* Demo Info Banner */
+      .demo-banner {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        z-index: 1000;
+        color: white;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .demo-banner strong {
+        color: #a78bfa;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero-section">
+      <!-- Animated Grid Background -->
+      <div class="grid-container">
+        <canvas class="grid-canvas" id="gridCanvas"></canvas>
+      </div>
+
+      <!-- Gradient Overlay -->
+      <div class="gradient-overlay"></div>
+
+      <!-- Hero Content -->
+      <div class="hero-content">
+        <h1>
+          Effortless Time Tracking.<br />
+          Irish Compliance. <span class="highlight">AI-Powered.</span>
+        </h1>
+        <p>
+          Simplify employee time management and ensure regulatory adherence with
+          Facetimer's smart, secure solution, designed for Irish businesses.
+        </p>
+        <div class="cta-buttons">
+          <button class="btn btn-primary">Start Your Free Trial</button>
+          <button class="btn btn-secondary">Book a Demo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Info Banner -->
+    <div class="demo-banner">
+      <strong>✨ Demo:</strong> Анимированная сетка с пульсирующими точками |
+      Минималистично и профессионально
+    </div>
+
+    <script>
+      // Canvas setup
+      const canvas = document.getElementById("gridCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      // Grid settings
+      const gridSize = 60; // Distance between grid lines
+      const dotRadius = 2.5;
+      const glowRadius = 3; // Reduced from 20 to 3 (about 6-7x smaller)
+
+      // Create grid intersection points
+      const gridPoints = [];
+      function createGridPoints() {
+        gridPoints.length = 0;
+        const cols = Math.ceil(canvas.width / gridSize) + 1;
+        const rows = Math.ceil(canvas.height / gridSize) + 1;
+
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            gridPoints.push({
+              x: i * gridSize,
+              y: j * gridSize,
+              brightness: Math.random(),
+              pulseSpeed: 0.001 + Math.random() * 0.003, // Much slower pulse
+              pulsePhase: Math.random() * Math.PI * 2,
+              flickerSpeed: 0.0005 + Math.random() * 0.001, // Slow flicker
+              flickerPhase: Math.random() * Math.PI * 2,
+            });
+          }
+        }
+      }
+      createGridPoints();
+      window.addEventListener("resize", createGridPoints);
+
+      // Mouse tracking for interactive glow
+      let mouseX = canvas.width / 2;
+      let mouseY = canvas.height / 2;
+      let targetMouseX = mouseX;
+      let targetMouseY = mouseY;
+
+      canvas.addEventListener("mousemove", (e) => {
+        targetMouseX = e.clientX;
+        targetMouseY = e.clientY;
+      });
+
+      // Smooth mouse following
+      function updateMouse() {
+        mouseX += (targetMouseX - mouseX) * 0.1;
+        mouseY += (targetMouseY - mouseY) * 0.1;
+      }
+
+      // Animation function
+      let time = 0;
+      function animate() {
+        time += 0.005; // Slower time progression for smoother animation
+        updateMouse();
+
+        // Clear canvas with subtle background
+        ctx.fillStyle = "rgba(250, 248, 251, 0.1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid lines - 35% more transparent
+        ctx.strokeStyle = "rgba(139, 92, 246, 0.052)";
+        ctx.lineWidth = 1;
+
+        // Vertical lines
+        for (let x = 0; x <= canvas.width; x += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+
+        // Horizontal lines
+        for (let y = 0; y <= canvas.height; y += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+        }
+
+        // Draw glowing dots at intersections
+        gridPoints.forEach((point) => {
+          // Calculate distance from mouse
+          const dx = point.x - mouseX;
+          const dy = point.y - mouseY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const maxDistance = 300;
+
+          // Mouse proximity effect
+          const mouseInfluence = Math.max(0, 1 - distance / maxDistance);
+
+          // Pulsating brightness
+          point.pulsePhase += point.pulseSpeed;
+          const pulse = (Math.sin(point.pulsePhase + time * 2) + 1) / 2;
+
+          // Slow flickering effect
+          point.flickerPhase += point.flickerSpeed;
+          const flicker = (Math.sin(point.flickerPhase) + 1) / 2;
+          const flickerEffect = 0.7 + flicker * 0.3; // Subtle flicker between 70% and 100%
+
+          // Combined brightness
+          const brightness = (pulse * 0.4 + mouseInfluence * 0.3) * flickerEffect; // Reduced intensity with flicker
+          const alpha = (0.1 + brightness * 0.25) * 0.65; // 35% more transparent overall
+
+          // Glow effect
+          if (brightness > 0.3 || mouseInfluence > 0.1) {
+            const gradient = ctx.createRadialGradient(
+              point.x,
+              point.y,
+              0,
+              point.x,
+              point.y,
+              glowRadius * (0.5 + brightness * 0.5)
+            );
+
+            // Color based on position and mouse proximity
+            const hue = mouseInfluence > 0.3 ? 280 : 260; // Purple to blue
+            gradient.addColorStop(0, `hsla(${hue}, 70%, 65%, ${alpha * 0.5})`);
+            gradient.addColorStop(0.5, `hsla(${hue}, 70%, 65%, ${alpha * 0.15})`);
+            gradient.addColorStop(1, "hsla(260, 70%, 65%, 0)");
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Draw dot
+          ctx.fillStyle = `rgba(139, 92, 246, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(
+            point.x,
+            point.y,
+            dotRadius * (1 + brightness * 0.5),
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      // Start animation
+      animate();
+
+      // Add wave effect on click
+      canvas.addEventListener("click", (e) => {
+        const clickX = e.clientX;
+        const clickY = e.clientY;
+
+        gridPoints.forEach((point) => {
+          const dx = point.x - clickX;
+          const dy = point.y - clickY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const delay = distance / 500;
+
+          setTimeout(() => {
+            point.pulsePhase = 0;
+          }, delay * 1000);
+        });
+      });
+    </script>
+  </body>
+</html>

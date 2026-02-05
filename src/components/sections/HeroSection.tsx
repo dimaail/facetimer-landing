@@ -2,11 +2,17 @@
 
 import { motion } from 'framer-motion'
 import { PlayCircle } from 'lucide-react'
+import AnimatedGridBackground from '@/components/animations/AnimatedGridBackground'
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center bg-white pt-20">
-      <div className="container mx-auto px-6 py-20 max-w-7xl">
+    <section className="relative min-h-screen flex items-center bg-white pt-20 overflow-hidden">
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 z-0">
+        <AnimatedGridBackground />
+      </div>
+
+      <div className="container mx-auto px-6 py-20 max-w-7xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -23,7 +29,7 @@ export default function HeroSection() {
           {/* Sub-headline */}
           <p className="text-xl md:text-2xl text-navy/70 mb-12 max-w-3xl mx-auto leading-relaxed">
             Simplify employee time management and ensure regulatory adherence 
-            with Facetimer's smart, secure solution, designed for Irish businesses.
+            with Facetimer&apos;s smart, secure solution, designed for Irish businesses.
           </p>
 
           {/* Video Placeholder */}
@@ -92,12 +98,6 @@ export default function HeroSection() {
           </motion.p>
         </motion.div>
       </div>
-
-      {/* Background Decoration */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-lavender/10 to-transparent 
-        rounded-full blur-3xl opacity-50 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-mint/10 to-transparent 
-        rounded-full blur-3xl opacity-50 pointer-events-none" />
     </section>
   )
 }
