@@ -51,11 +51,11 @@ export default function BenefitsSection() {
         >
           <h2 className="text-5xl md:text-6xl font-bold text-navy mb-6">
             Why Facetimer is the Right Choice<br />
-            <span className="text-lavender">for Your Irish Business</span>
+            <span className="text-lavender">for Your EU Business</span>
           </h2>
           <p className="text-xl text-navy/60 max-w-3xl mx-auto">
             Unlock efficiency, ensure compliance, and boost productivity with a solution 
-            tailored for the Irish market
+            tailored for the EU market
           </p>
         </motion.div>
 

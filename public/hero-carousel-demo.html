@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section with Carousel - Facetimer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 
+                         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: #ffffff;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 40px;
+            align-items: center;
+            padding: 80px 0;
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .hero.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Content */
+        .hero-content h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .hero-content h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: #6b7280;
+            max-width: 420px;
+            margin-bottom: 32px;
+        }
+
+        /* CTA Buttons */
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 12px 24px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1.5px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .hero-note {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-left: 4px;
+        }
+
+        /* Hero Visual - Carousel */
+        .hero-visual {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px;
+        }
+
+        .hero-slide.is-active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .hero-slide.is-prev {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        /* Slide Content Styling */
+        .slide-content {
+            text-align: center;
+        }
+
+        .slide-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .slide-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .slide-description {
+            font-size: 1rem;
+            color: #64748b;
+            max-width: 300px;
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .indicator.is-active {
+            width: 24px;
+            border-radius: 4px;
+            background: #2563eb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                padding: 60px 0;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 0;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content h2 {
+                font-size: 1.25rem;
+            }
+
+            .hero-sub {
+                font-size: 1rem;
+            }
+
+            .hero-visual {
+                height: 320px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .slide-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+
+            .slide-title {
+                font-size: 1.25rem;
+            }
+
+            .slide-description {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-cta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hero-note {
+                text-align: center;
+                margin-left: 0;
+            }
+        }
+
+        /* Accessibility: Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .hero,
+            .hero-slide {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero js-hero">
+            <div class="hero-content">
+                <h1>Time tracking your team won't hate.</h1>
+                <p class="hero-sub">
+                    AI-assisted, privacy-first, built for EU requirements.
+                </p>
+
+                <div class="hero-cta">
+                    <button class="btn-primary">Try It Free</button>
+                    <button class="btn-secondary">Book a Demo</button>
+                    <span class="hero-note">No card required</span>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-carousel">
+                    <div class="hero-slide is-active" data-slide="0">
+                        <div class="slide-content">
+                            <div class="slide-icon">⏱️</div>
+                            <h3 class="slide-title">Smart Time Tracking</h3>
+                            <p class="slide-description">
+                                AI-powered tracking that understands your workflow
+                            </p>
+                        </div>
+                    </div>
+                    <div class="hero-slide" data-slide="1">
+                        <div class="slide-content">
+                            <div class="slide-icon">🔒</div>
+                            <h3 class="slide-title">Privacy First</h3>
+                            <p class="slide-description">
+                                GDPR compliant, built for European data standards
+                            </p>
+                        </div>
+                    </div>
+                    <div class="hero-slide" data-slide="2">
+                        <div class="slide-content">
+                            <div class="slide-icon">📊</div>
+                            <h3 class="slide-title">Real-time Analytics</h3>
+                            <p class="slide-description">
+                                Instant insights into team productivity and compliance
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+                    <span class="indicator is-active" data-index="0"></span>
+                    <span class="indicator" data-index="1"></span>
+                    <span class="indicator" data-index="2"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Fade-in HERO on load
+        window.addEventListener('load', () => {
+            const hero = document.querySelector('.js-hero');
+            if (hero) {
+                hero.classList.add('is-visible');
+            }
+        });
+
+        // Carousel rotation logic
+        const slides = document.querySelectorAll('.hero-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
+        let autoRotateInterval;
+
+        function goToSlide(index) {
+            // Remove active states
+            slides[currentSlide].classList.remove('is-active');
+            slides[currentSlide].classList.add('is-prev');
+            indicators[currentSlide].classList.remove('is-active');
+
+            // Set new active slide
+            currentSlide = index;
+            
+            // Add active states
+            slides[currentSlide].classList.remove('is-prev');
+            slides[currentSlide].classList.add('is-active');
+            indicators[currentSlide].classList.add('is-active');
+        }
+
+        function rotateSlides() {
+            const nextSlide = (currentSlide + 1) % slides.length;
+            goToSlide(nextSlide);
+        }
+
+        // Auto-rotate every 3.5 seconds
+        function startAutoRotate() {
+            autoRotateInterval = setInterval(rotateSlides, 3500);
+        }
+
+        function stopAutoRotate() {
+            clearInterval(autoRotateInterval);
+        }
+
+        // Manual indicator click
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                stopAutoRotate();
+                goToSlide(index);
+                startAutoRotate(); // Restart auto-rotation after manual click
+            });
+        });
+
+        // Pause on hover (desktop only)
+        const heroVisual = document.querySelector('.hero-visual');
+        if (window.innerWidth > 768) {
+            heroVisual.addEventListener('mouseenter', stopAutoRotate);
+            heroVisual.addEventListener('mouseleave', startAutoRotate);
+        }
+
+        // Start auto-rotation
+        startAutoRotate();
+
+        // Pause when page is not visible (performance optimization)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRotate();
+            } else {
+                startAutoRotate();
+            }
+        });
+    </script>
+</body>
+</html>

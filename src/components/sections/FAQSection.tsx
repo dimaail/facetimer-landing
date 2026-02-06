@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     question: 'What kind of support is available?',
-    answer: 'We offer comprehensive support to ensure your success with Facetimer, including online resources, email support, live chat, and dedicated assistance for enterprise clients. Our support team is available during Irish business hours with priority response times for critical issues.'
+    answer: 'We offer comprehensive support to ensure your success with Facetimer, including online resources, email support, live chat, and dedicated assistance for enterprise clients. Our support team is available during EU business hours with priority response times for critical issues.'
   },
   {
     question: 'How long does it take to implement Facetimer?',

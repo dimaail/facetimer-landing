@@ -101,7 +101,7 @@ export default function FinalCTA() {
             className="mt-12 pt-12 border-t border-white/10"
           >
             <p className="text-white/60 text-sm mb-4">
-              Trusted by businesses across Ireland and the EU
+              Trusted by businesses across the EU
             </p>
             <div className="flex flex-wrap justify-center items-center gap-8 opacity-50">
               {/* Logo placeholders */}

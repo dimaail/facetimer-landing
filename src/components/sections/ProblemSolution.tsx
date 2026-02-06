@@ -10,7 +10,7 @@ const problems = [
   },
   {
     title: 'Compliance Headaches',
-    description: 'Navigating the Irish Organisation of Working Time Act complexities is stressful. Ensuring accurate record-keeping is critical, yet often cumbersome.'
+    description: 'Navigating the EU Organisation of Working Time Act complexities is stressful. Ensuring accurate record-keeping is critical, yet often cumbersome.'
   },
   {
     title: '"Buddy Punching" & Fraud',
@@ -28,7 +28,7 @@ const solutions = [
     description: 'Facetimer eliminates manual errors and time theft with advanced AI face recognition. Quick, secure scans ensure precise records every time.'
   },
   {
-    title: 'Automated Irish Compliance',
+    title: 'Automated EU Compliance',
     description: 'Our system simplifies WTR adherence. Automatically records working hours, breaks, and attendance with auditable reports.'
   },
   {
@@ -54,7 +54,7 @@ export default function ProblemSolution() {
           className="text-center mb-20"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-navy mb-6">
-            The Challenges of Time Tracking in Ireland?{' '}
+            The Challenges of Time Tracking in EU?{' '}
             <span className="text-lavender">Solved.</span>
           </h2>
         </motion.div>
@@ -74,7 +74,7 @@ export default function ProblemSolution() {
                 The Challenge
               </span>
               <h3 className="text-3xl font-bold text-navy mb-4">
-                Common Pain Points for Irish Businesses
+                Common Pain Points for EU Businesses
               </h3>
             </div>
 

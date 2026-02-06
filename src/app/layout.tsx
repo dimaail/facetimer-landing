@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Facetimer Ireland | AI-Powered Time Tracking for Irish Compliance",
-  description: "Simplify employee time management and ensure regulatory adherence with Facetimer's smart, secure solution, designed for Irish businesses.",
+  title: "Facetimer EU | AI-Powered Time Tracking for EU Compliance",
+  description: "Simplify employee time management and ensure regulatory adherence with Facetimer's smart, secure solution, designed for EU businesses.",
 };
 
 export default function RootLayout({

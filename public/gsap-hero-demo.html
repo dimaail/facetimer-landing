@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP ScrollTrigger Hero Demo</title>
+    
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --bg-dark: #0a0a0a;
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 
+                         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: var(--text-primary);
+            background: var(--bg-dark);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            overflow: hidden;
+            will-change: transform, opacity;
+        }
+
+        /* Background decoration */
+        .hero-bg-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            will-change: transform;
+        }
+
+        .gradient-orb-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            right: -200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .gradient-orb-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            left: -150px;
+            background: linear-gradient(135deg, #ec4899, #f59e0b);
+        }
+
+        /* Hero content container */
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            padding: 0 20px;
+            text-align: center;
+            will-change: transform, opacity;
+        }
+
+        /* Hero title */
+        .hero-title {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        /* Hero subtitle */
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        .cta-button:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 4px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .scroll-indicator-text {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        .scroll-indicator-icon {
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--text-secondary);
+            border-radius: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 8px;
+        }
+
+        .scroll-indicator-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(12px);
+                opacity: 0.5;
+            }
+        }
+
+        /* Content sections for scroll demonstration */
+        .content-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            background: var(--bg-dark);
+        }
+
+        .content-box {
+            max-width: 800px;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-box h2 {
+            font-size: 48px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .content-box p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: clamp(40px, 7vw, 72px);
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(16px, 2.5vw, 20px);
+            }
+            
+            .cta-button {
+                padding: 16px 40px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: clamp(32px, 6vw, 56px);
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(14px, 2vw, 18px);
+                margin-bottom: 32px;
+            }
+            
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 15px;
+            }
+
+            .scroll-indicator {
+                bottom: 24px;
+            }
+
+            .content-box {
+                padding: 40px 24px;
+            }
+
+            .gradient-orb-1,
+            .gradient-orb-2 {
+                filter: blur(80px);
+                opacity: 0.2;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .hero-title {
+                font-size: 28px;
+            }
+            
+            .hero-subtitle {
+                font-size: 14px;
+            }
+            
+            .cta-button {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .scroll-indicator-dot {
+                animation: none;
+            }
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 0 0 8px 0;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Hero Section -->
+    <header class="hero-section" id="hero">
+        <!-- Background decorations -->
+        <div class="hero-bg-decoration">
+            <div class="gradient-orb gradient-orb-1"></div>
+            <div class="gradient-orb gradient-orb-2"></div>
+        </div>
+
+        <!-- Hero content -->
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">
+                Build the New Way
+            </h1>
+            <p class="hero-subtitle" id="heroSubtitle">
+                Experience the future of development with stunning scroll-based animations 
+                and cutting-edge design patterns
+            </p>
+            <a href="#main-content" class="cta-button" id="ctaButton" aria-label="Get started with our platform">
+                Get Started
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.16675 10H15.8334M15.8334 10L10.0001 4.16669M15.8334 10L10.0001 15.8334" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator" id="scrollIndicator" role="button" tabindex="0" 
+             aria-label="Scroll down to see more content">
+            <span class="scroll-indicator-text">Scroll</span>
+            <div class="scroll-indicator-icon">
+                <div class="scroll-indicator-dot"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content">
+        <section class="content-section">
+            <div class="content-box">
+                <h2>Scroll-Based Animations</h2>
+                <p>
+                    The hero section above demonstrates advanced scroll-triggered animations using GSAP ScrollTrigger. 
+                    As you scroll, notice how elements fade out, scale down, and move with parallax effects, 
+                    all synchronized perfectly with your scroll position.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="content-box">
+                <h2>Performance Optimized</h2>
+                <p>
+                    All animations are GPU-accelerated and optimized for 60fps performance. We use will-change 
+                    CSS properties, hardware-accelerated transforms, and efficient event handling to ensure 
+                    smooth animations across all modern devices.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="content-box">
+                <h2>Fully Accessible</h2>
+                <p>
+                    This demo respects user preferences for reduced motion, includes proper semantic HTML, 
+                    ARIA labels, and keyboard navigation support. Accessibility is not an afterthought—it's 
+                    built into every aspect of the design.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Register GSAP ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Check if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Initialize animations after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAnimations();
+            setupScrollIndicator();
+        });
+
+        function initializeAnimations() {
+            // Skip complex animations if user prefers reduced motion
+            if (prefersReducedMotion) {
+                // Simple fade-in for reduced motion users
+                gsap.to(['.hero-title', '.hero-subtitle', '.cta-button', '.scroll-indicator'], {
+                    opacity: 1,
+                    duration: 0.3,
+                    stagger: 0.1
+                });
+                return;
+            }
+
+            // Timeline for initial load animations
+            const initialTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+            // Hero title animation (fade-in + slide-up)
+            initialTimeline.fromTo('.hero-title',
+                {
+                    opacity: 0,
+                    y: 50,
+                    scale: 0.95
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 1,
+                    delay: 0.2
+                }
+            );
+
+            // Hero subtitle animation (fade-in with delay)
+            initialTimeline.fromTo('.hero-subtitle',
+                {
+                    opacity: 0,
+                    y: 30
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8
+                },
+                '-=0.6' // Start 0.6s before previous animation ends
+            );
+
+            // CTA button animation (fade-in + scale)
+            initialTimeline.fromTo('.cta-button',
+                {
+                    opacity: 0,
+                    y: 20,
+                    scale: 0.95
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.6
+                },
+                '-=0.4'
+            );
+
+            // Scroll indicator animation (fade-in)
+            initialTimeline.fromTo('.scroll-indicator',
+                {
+                    opacity: 0,
+                    y: 20
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6
+                },
+                '-=0.3'
+            );
+
+            // Scroll-triggered animations for hero section
+            setupScrollAnimations();
+        }
+
+        function setupScrollAnimations() {
+            // Hero content - fade out and scale down on scroll
+            gsap.to('.hero-content', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1, // Smooth scrubbing effect (1 second lag)
+                    // markers: true // Uncomment for debugging
+                },
+                opacity: 0,
+                scale: 0.8,
+                y: -100,
+                ease: 'none'
+            });
+
+            // Hero title - additional parallax effect
+            gsap.to('.hero-title', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                y: -150,
+                ease: 'none'
+            });
+
+            // Hero subtitle - slower parallax
+            gsap.to('.hero-subtitle', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                y: -100,
+                ease: 'none'
+            });
+
+            // Scroll indicator - fade out quickly
+            gsap.to('.scroll-indicator', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'top -10%',
+                    scrub: 1
+                },
+                opacity: 0,
+                y: 20,
+                ease: 'none'
+            });
+
+            // Background gradient orbs - subtle parallax
+            gsap.to('.gradient-orb-1', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 2
+                },
+                y: -200,
+                x: -100,
+                ease: 'none'
+            });
+
+            gsap.to('.gradient-orb-2', {
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 2
+                },
+                y: 200,
+                x: 100,
+                ease: 'none'
+            });
+
+            // Content sections - fade-in on scroll
+            gsap.utils.toArray('.content-box').forEach((box, index) => {
+                gsap.fromTo(box,
+                    {
+                        opacity: 0,
+                        y: 100
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        scrollTrigger: {
+                            trigger: box,
+                            start: 'top 80%',
+                            end: 'top 50%',
+                            scrub: 1
+                        }
+                    }
+                );
+            });
+        }
+
+        function setupScrollIndicator() {
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            
+            // Click handler for scroll indicator
+            scrollIndicator.addEventListener('click', () => {
+                window.scrollTo({
+                    top: window.innerHeight,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Keyboard support (Enter or Space)
+            scrollIndicator.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+
+        // Optional: Add mouse parallax effect for desktop
+        if (!prefersReducedMotion && window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = (e.clientX / window.innerWidth) - 0.5;
+                const mouseY = (e.clientY / window.innerHeight) - 0.5;
+
+                gsap.to('.gradient-orb-1', {
+                    x: mouseX * 50,
+                    y: mouseY * 50,
+                    duration: 1,
+                    ease: 'power2.out'
+                });
+
+                gsap.to('.gradient-orb-2', {
+                    x: -mouseX * 30,
+                    y: -mouseY * 30,
+                    duration: 1,
+                    ease: 'power2.out'
+                });
+            });
+        }
+
+        // Performance monitoring (optional)
+        if (window.performance && window.performance.mark) {
+            window.addEventListener('load', () => {
+                performance.mark('animations-initialized');
+                console.log('✅ GSAP ScrollTrigger animations initialized');
+            });
+        }
+    </script>
+</body>
+</html>

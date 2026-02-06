@@ -25,7 +25,7 @@ const footerLinks = {
     { name: 'GDPR Compliance', href: '#' },
     { name: 'Data Protection', href: '#' },
     { name: 'Cookie Policy', href: '#' },
-    { name: 'Irish WTR Info', href: '#' },
+    { name: 'EU WTR Info', href: '#' },
   ]
 }
 
@@ -45,7 +45,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h3 className="text-2xl font-bold mb-4">Facetimer</h3>
             <p className="text-white/60 mb-6 leading-relaxed">
-              AI-powered time tracking solution designed for Irish businesses. 
+              AI-powered time tracking solution designed for EU businesses. 
               Ensure compliance, eliminate fraud, and streamline operations.
             </p>
             
@@ -54,7 +54,7 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-lavender flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-white/60">
-                  Dublin, Ireland
+                  Brussels, EU
                 </span>
               </div>
               <div className="flex items-center gap-3">

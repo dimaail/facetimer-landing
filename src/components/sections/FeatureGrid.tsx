@@ -13,7 +13,7 @@ const features = [
   },
   {
     icon: CheckCircle,
-    title: 'Irish Compliance Ready',
+    title: 'EU Compliance Ready',
     description: 'Automated record-keeping and reporting tools tailored to meet the specific requirements of the Organisation of Working Time Act.',
     placeholder: null,
     hasPlaceholder: false
@@ -64,7 +64,7 @@ export default function FeatureGrid() {
             Key Features Designed for Your Business Success
           </h2>
           <p className="text-xl text-navy/60 max-w-2xl mx-auto">
-            Discover how Facetimer empowers Irish businesses with intelligent time management
+            Discover how Facetimer empowers EU businesses with intelligent time management
           </p>
         </motion.div>
 

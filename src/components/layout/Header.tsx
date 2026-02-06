@@ -90,7 +90,7 @@ export default function Header() {
                   hover:bg-lavender transition-colors duration-300"
                 style={{ boxShadow: '0 0 20px rgba(157, 123, 255, 0.2)' }}
               >
-                Start Free Trial
+                Try it free
               </motion.button>
             </div>
 
@@ -155,7 +155,7 @@ export default function Header() {
                 className="w-full px-6 py-3 bg-navy text-white font-semibold rounded-xl
                   hover:bg-lavender transition-colors"
               >
-                Start Free Trial
+                Try it free
               </button>
             </div>
           </nav>
